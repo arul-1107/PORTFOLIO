@@ -5,7 +5,7 @@ export default function Skills() {
     'Jenkins',
     'Spring Boot',
     'Maven',
-    'Nginx',vi
+    'Nginx',
     'MySQL'
   ]
 
