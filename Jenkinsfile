@@ -21,6 +21,7 @@ pipeline {
         stage('Frontend Build') {
             steps {
                 dir('metallic-frontend') {
+                    bat 'rmdir /s /q node_modules || exit 0'
                     bat 'npm install'
                     bat 'npm run build'
                 }
