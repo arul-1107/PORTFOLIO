@@ -1,3 +1,4 @@
+```groovy
 pipeline {
 
     agent any
@@ -11,7 +12,10 @@ pipeline {
 
         stage('Clone') {
             steps {
-                git 'https://github.com/arul-1107/PORTFOLIO'
+                git(
+                    branch: 'main',
+                    url: 'https://github.com/arul-1107/PORTFOLIO.git'
+                )
             }
         }
 
@@ -34,13 +38,13 @@ pipeline {
 
         stage('Docker Build Frontend') {
             steps {
-                sh 'docker build -t $FRONTEND_IMAGE ./metallic-frontend'
+                sh 'docker build -t %FRONTEND_IMAGE% ./metallic-frontend'
             }
         }
 
         stage('Docker Build Backend') {
             steps {
-                sh 'docker build -t $BACKEND_IMAGE ./metallic-backend'
+                sh 'docker build -t %BACKEND_IMAGE% ./metallic-backend'
             }
         }
 
@@ -52,3 +56,5 @@ pipeline {
         }
     }
 }
+
+
