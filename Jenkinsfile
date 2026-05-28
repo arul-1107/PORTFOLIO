@@ -21,8 +21,8 @@ pipeline {
         stage('Frontend Build') {
             steps {
                 dir('metallic-frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    bat 'npm install'
+                    bat 'npm run build'
                 }
             }
         }
@@ -30,27 +30,27 @@ pipeline {
         stage('Backend Build') {
             steps {
                 dir('metallic-backend') {
-                    sh 'mvn clean package'
+                    bat 'mvn clean package'
                 }
             }
         }
 
         stage('Docker Build Frontend') {
             steps {
-                sh 'docker build -t %FRONTEND_IMAGE% ./metallic-frontend'
+                bat 'docker build -t %FRONTEND_IMAGE% ./metallic-frontend'
             }
         }
 
         stage('Docker Build Backend') {
             steps {
-                sh 'docker build -t %BACKEND_IMAGE% ./metallic-backend'
+                bat 'docker build -t %BACKEND_IMAGE% ./metallic-backend'
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d --build'
+                bat 'docker compose down'
+                bat 'docker compose up -d --build'
             }
         }
     }
