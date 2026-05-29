@@ -11,10 +11,8 @@ pipeline {
 
         stage('Clone') {
             steps {
-                git(
-                    branch: 'main',
+                git branch: 'main',
                     url: 'https://github.com/arul-1107/PORTFOLIO.git'
-                )
             }
         }
 
@@ -31,30 +29,40 @@ pipeline {
         stage('Backend Build') {
             steps {
                 dir('metallic-backend') {
-                    bat 'mvn clean package'
+                    bat 'mvn clean package -DskipTests'
                 }
+            }
+        }
+
+        stage('Docker Pull Base Images') {
+            steps {
+                bat 'docker pull node:20 || exit 0'
+                bat 'docker pull nginx:alpine || exit 0'
+                bat 'docker pull openjdk:21 || exit 0'
             }
         }
 
         stage('Docker Build Frontend') {
             steps {
-                bat 'docker build -t %FRONTEND_IMAGE% ./metallic-frontend'
+                retry(3) {
+                    bat 'docker build -t %FRONTEND_IMAGE% ./metallic-frontend'
+                }
             }
         }
 
         stage('Docker Build Backend') {
             steps {
-                bat 'docker build -t %BACKEND_IMAGE% ./metallic-backend'
+                retry(3) {
+                    bat 'docker build -t %BACKEND_IMAGE% ./metallic-backend'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                bat 'docker compose down'
+                bat 'docker compose down -v'
                 bat 'docker compose up -d --build'
             }
         }
     }
 }
-
-
