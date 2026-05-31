@@ -1,18 +1,25 @@
+# ---------- BUILD STAGE ----------
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
+# copy pom first (better caching)
 COPY pom.xml .
 COPY src ./src
 
+# build spring boot fat jar
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:21
+# ---------- RUNTIME STAGE ----------
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
+# copy generated jar (explicit naming is safer)
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8091
+# expose backend port (match spring boot port)
+EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar"]
+# run app
+ENTRYPOINT ["java", "-jar", "app.jar"]

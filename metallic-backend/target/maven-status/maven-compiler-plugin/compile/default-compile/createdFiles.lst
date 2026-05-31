@@ -1,0 +1,5 @@
+com\zoro\controller\PortfolioController.class
+com\zoro\entity\Contact.class
+com\zoro\MetallicApplication.class
+com\zoro\service\ContactService.class
+com\zoro\repository\ContactRepository.class
